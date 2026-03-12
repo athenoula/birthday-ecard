@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Dad!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:wght@400;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       COLOUR SYSTEM
+       ============================================ */
+    :root {
+      /* Background */
+      --bg-primary: #1A1510;
+      --bg-surface: #2A2219;
+      --bg-film: #3D3428;
+
+      /* Gold accents */
+      --gold-bright: #FFD054;
+      --gold-primary: #FFC22E;
+      --gold-rich: #E8A800;
+      --gold-glow: #FFE08A;
+      --gold-shimmer: #FFF0C7;
+
+      /* Burgundy */
+      --burgundy: #8B1A1A;
+      --burgundy-light: #C93C3C;
+
+      /* Text */
+      --text-primary: #FFF8E8;
+      --text-muted: #E8DCC0;
+      --text-heading: #FFD054;
+
+      /* Navigation */
+      --nav-active: #FFC22E;
+      --nav-inactive: #3D3428;
+
+      /* Typography */
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Lora', Georgia, serif;
+      --font-accent: 'Dancing Script', cursive;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       OPENING / HERO SECTION
+       ============================================ */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* WebGL vortex canvas behind hero text */
+    .hero-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    /* Dark overlay so text stays readable over the vortex */
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, rgba(26, 21, 16, 0.3) 0%, rgba(26, 21, 16, 0.7) 100%);
+      pointer-events: none;
+    }
+
+    /* Push hero text above the canvas */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-title {
+      font: 900 64px/1.1 var(--font-display);
+      color: var(--text-heading);
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 60px rgba(255, 208, 84, 0.4), 0 2px 20px rgba(0,0,0,0.6);
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.3s forwards;
+    }
+
+    .hero-subtitle {
+      font: 700 48px/1.15 var(--font-display);
+      color: var(--gold-primary);
+      letter-spacing: -0.02em;
+      margin-top: 0.2em;
+      text-shadow: 0 0 40px rgba(255, 194, 46, 0.35), 0 2px 20px rgba(0,0,0,0.6);
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.6s forwards;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+      margin: 1.5rem 0;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 1s forwards;
+    }
+
+    .hero-scroll-hint {
+      font: 400 14px/1.4 var(--font-body);
+      color: var(--text-muted);
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 1.5s forwards;
+    }
+
+    .hero-scroll-hint .arrow {
+      display: block;
+      margin-top: 0.5rem;
+      animation: bounce 2s ease-in-out infinite;
+      font-size: 20px;
+    }
+
+    /* ============================================
+       FILMSTRIP SLIDESHOW
+       ============================================ */
+    .filmstrip-section {
+      padding: 4rem 0;
+      position: relative;
+    }
+
+    .filmstrip-container {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      padding: 0 1rem;
+    }
+
+    /* Film sprocket strip - top */
+    .film-sprockets {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2rem;
+      margin-bottom: 0;
+    }
+
+    .film-strip-edge {
+      background: var(--bg-surface);
+      border: 1px solid var(--bg-film);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 12px;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .film-strip-edge.bottom {
+      border-radius: 0 0 2px 2px;
+      margin-top: 0;
+    }
+
+    .sprocket {
+      width: 20px;
+      height: 14px;
+      background: var(--bg-primary);
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin: 0 8px;
+    }
+
+    /* Slide viewport */
+    .slideshow {
+      position: relative;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--bg-film);
+      border-right: 1px solid var(--bg-film);
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .slide-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 3rem 1.5rem 1.2rem;
+      background: linear-gradient(transparent, rgba(26, 21, 16, 0.85));
+      font: 500 20px/1.3 var(--font-body);
+      color: var(--text-primary);
+      z-index: 2;
+      text-align: center;
+    }
+
+    /* Placeholder slide (shown when no photos are added yet) */
+    .slide-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font: 400 16px/1.5 var(--font-body);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .slide-placeholder .placeholder-icon {
+      font-size: 48px;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .slide-placeholder code {
+      background: var(--bg-film);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* Navigation arrows */
+    .slide-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(26, 21, 16, 0.6);
+      border: 1px solid var(--bg-film);
+      color: var(--gold-primary);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .slide-nav:hover {
+      background: rgba(26, 21, 16, 0.85);
+      color: var(--gold-bright);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .slide-nav.prev { left: 1rem; }
+    .slide-nav.next { right: 1rem; }
+
+    /* Navigation dots */
+    .slide-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 1.2rem 0.5rem;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--bg-film);
+      border-right: 1px solid var(--bg-film);
+      flex-wrap: wrap;
+    }
+
+    .slide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--nav-inactive);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .slide-dot.active {
+      background: var(--nav-active);
+      box-shadow: 0 0 8px rgba(255, 194, 46, 0.4);
+    }
+
+    .slide-dot:hover {
+      background: var(--gold-rich);
+    }
+
+    /* Slide counter */
+    .slide-counter {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10;
+      font: 400 13px/1 var(--font-body);
+      color: var(--text-muted);
+      background: rgba(26, 21, 16, 0.6);
+      padding: 6px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ============================================
+       PERSONAL MESSAGE SECTION
+       ============================================ */
+    .message-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .message-section .decorative-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--burgundy-light), transparent);
+      margin: 0 auto 2.5rem;
+    }
+
+    .message-heading {
+      font: 700 32px/1.2 var(--font-body);
+      color: var(--text-heading);
+      margin-bottom: 1.5rem;
+    }
+
+    .message-body {
+      font: 400 18px/1.8 var(--font-body);
+      color: var(--text-muted);
+      max-width: 60ch;
+      margin: 0 auto;
+      white-space: pre-line;
+    }
+
+    .message-signoff {
+      margin-top: 2.5rem;
+    }
+
+    .message-signoff .with-love {
+      font: 700 28px/1.3 var(--font-accent);
+      color: var(--gold-glow);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .message-signoff .from {
+      font: 500 20px/1.3 var(--font-body);
+      color: var(--text-primary);
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--bg-film);
+    }
+
+    .footer-text {
+      font: 700 20px/1.3 var(--font-accent);
+      color: var(--gold-glow);
+    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* Scroll-triggered fade in */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 40px;
+      }
+      .hero-subtitle {
+        font-size: 32px;
+      }
+      .slide-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+      .slide-nav.prev { left: 0.5rem; }
+      .slide-nav.next { right: 0.5rem; }
+      .slide-caption {
+        font-size: 16px;
+        padding: 2rem 1rem 1rem;
+      }
+      .message-heading {
+        font-size: 24px;
+      }
+      .message-body {
+        font-size: 16px;
+      }
+      .sprocket {
+        width: 14px;
+        height: 10px;
+        margin: 0 4px;
+      }
+      .film-strip-edge {
+        height: 30px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-title {
+        font-size: 72px;
+      }
+      .hero-subtitle {
+        font-size: 56px;
+      }
+    }
+
+    /* ============================================
+       EDITOR STYLES
+       ============================================ */
+
+    /* Editable field highlight */
+    .editing [data-field][contenteditable="true"] {
+      outline: 2px dashed var(--gold-rich);
+      outline-offset: 4px;
+      border-radius: 4px;
+      cursor: text;
+      transition: outline-color 0.2s;
+    }
+    .editing [data-field][contenteditable="true"]:focus {
+      outline-color: var(--gold-bright);
+    }
+
+    /* PIN Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--gold-rich);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .modal h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-bright);
+      margin-bottom: 0.5rem;
+    }
+    .modal p {
+      color: var(--cream);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .modal input {
+      width: 100%;
+      padding: 0.85rem;
+      border: 1px solid var(--bg-film);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--cream);
+      font-size: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.3em;
+      margin-bottom: 1rem;
+    }
+    .modal input:focus {
+      outline: none;
+      border-color: var(--gold-rich);
+    }
+    .modal-error {
+      color: #F87171;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .modal-btn {
+      width: 100%;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+      transition: background 0.2s;
+    }
+    .modal-btn:hover {
+      background: var(--gold-bright);
+    }
+
+    /* Editor Toolbar */
+    .editor-toolbar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9000;
+      background: var(--bg-surface);
+      border-top: 2px solid var(--gold-rich);
+      padding: 0.75rem 1rem;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .editor-toolbar.active {
+      display: flex;
+    }
+    .toolbar-btn {
+      padding: 0.6rem 1.2rem;
+      border: 1px solid var(--gold-rich);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--gold-bright);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .toolbar-btn:hover {
+      background: var(--gold-rich);
+      color: var(--bg-primary);
+    }
+    .toolbar-btn.primary {
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+      border-color: var(--gold-primary);
+    }
+    .toolbar-btn.primary:hover {
+      background: var(--gold-bright);
+    }
+    .toolbar-btn.danger {
+      border-color: #F87171;
+      color: #F87171;
+    }
+    .toolbar-btn.danger:hover {
+      background: #F87171;
+      color: white;
+    }
+
+    /* Slide remove button (edit mode) */
+    .slide-remove-btn {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 20;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: rgba(220, 38, 38, 0.9);
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      line-height: 1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .slide-remove-btn:hover {
+      background: rgba(239, 68, 68, 1);
+      transform: scale(1.1);
+    }
+    .editing .slide-remove-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Upload progress */
+    .upload-progress {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10001;
+      background: var(--bg-surface);
+      border: 1px solid var(--gold-rich);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      min-width: 280px;
+    }
+    .upload-progress.active {
+      display: block;
+    }
+    .upload-progress p {
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-film);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--gold-primary);
+      width: 0%;
+      transition: width 0.3s;
+      border-radius: 4px;
+    }
+
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg-surface);
+      border: 1px solid var(--gold-rich);
+      color: var(--cream);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      z-index: 10002;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Share modal links */
+    .share-link-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    .share-link-group label {
+      display: block;
+      color: var(--gold-bright);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .share-link-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .share-link-row input {
+      flex: 1;
+      font-size: 0.85rem;
+      letter-spacing: 0;
+      text-align: left;
+    }
+    .share-link-row button {
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Body padding when toolbar is visible */
+    .editing {
+      padding-bottom: 70px;
+    }
+
+    /* Floating share button (visible on any Firestore card) */
+    .share-fab {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 8999;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--gold-rich);
+      background: var(--bg-surface);
+      color: var(--gold-bright);
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      transition: all 0.2s;
+      align-items: center;
+      justify-content: center;
+    }
+    .share-fab:hover {
+      background: var(--gold-rich);
+      color: var(--bg-primary);
+      transform: scale(1.1);
+    }
+    .share-fab.active {
+      display: flex;
+    }
+    .editing .share-fab {
+      bottom: 80px;
+    }
+  </style>
+
+  <!-- Firebase SDK (compat builds for inline script use) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <!-- Firebase Storage not needed — using Cloudinary for media uploads -->
+</head>
+<body>
+
+  <!-- ==========================================
+       HERO SECTION
+       ========================================== -->
+  <section class="hero">
+    <!-- WebGL2 Vortex Background -->
+    <canvas id="vortexCanvas" class="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-overlay"></div>
+
+    <!-- Hero Text (on top of the vortex) -->
+    <div class="hero-content">
+      <h1 class="hero-title" data-field="heroTitle">Happy Birthday</h1>
+      <h2 class="hero-subtitle" data-field="heroSubtitle">Dad</h2>
+      <div class="hero-divider"></div>
+      <p class="hero-scroll-hint">
+<span data-field="scrollHintText">Scroll down for a trip down memory lane</span>
+        <span class="arrow">&#8595;</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FILMSTRIP SLIDESHOW
+       ========================================== -->
+  <section class="filmstrip-section reveal">
+    <div class="filmstrip-container">
+
+      <!-- Top film sprocket strip -->
+      <div class="film-strip-edge" id="sprockets-top"></div>
+
+      <!-- Slides -->
+      <div class="slideshow" id="slideshow">
+        <span class="slide-counter" id="slideCounter">1 / 1</span>
+
+        <!-- Slides are rendered dynamically by renderSlides() -->
+
+        <!-- Arrow navigation -->
+        <button class="slide-nav prev" id="prevBtn" aria-label="Previous slide">&#10094;</button>
+        <button class="slide-nav next" id="nextBtn" aria-label="Next slide">&#10095;</button>
+      </div>
+
+      <!-- Dots -->
+      <div class="slide-dots" id="slideDots"></div>
+
+      <!-- Bottom film sprocket strip -->
+      <div class="film-strip-edge bottom" id="sprockets-bottom"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PERSONAL MESSAGE
+       ========================================== -->
+  <section class="message-section reveal">
+    <div class="decorative-line"></div>
+
+    <!--
+      =============================================
+      EDIT YOUR PERSONAL MESSAGE BELOW:
+      =============================================
+    -->
+    <h3 class="message-heading" data-field="messageHeading">A Few Words For You</h3>
+    <p class="message-body" data-field="messageBody">Dear Dad,
+
+Thank you for everything — for all the laughs, the lessons, and the love. Every memory with you is a gift, and today we celebrate the most wonderful dad in the world.
+
+Here's to many more adventures together.</p>
+
+    <div class="message-signoff">
+      <span class="with-love" data-field="signoffLine1">with all our love,</span>
+      <span class="from" data-field="signoffLine2">Your Kids</span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+  <footer class="footer">
+    <p class="footer-text" data-field="footerText">Happy Birthday!</p>
+  </footer>
+
+  <!-- ==========================================
+       PIN MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="pinModal">
+    <div class="modal">
+      <h2>Enter PIN</h2>
+      <p>This card is PIN-protected. Enter the PIN to edit.</p>
+      <input type="password" id="pinInput" placeholder="Enter PIN" maxlength="6" inputmode="numeric" autocomplete="off">
+      <div class="modal-error" id="pinError">Incorrect PIN. Please try again.</div>
+      <button class="modal-btn" id="pinSubmitBtn">Unlock</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       SHARE MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal">
+      <h2>Share This Card</h2>
+      <p>Share these links with family and friends.</p>
+      <div class="share-link-group">
+        <label>View-only link</label>
+        <div class="share-link-row">
+          <input type="text" id="shareViewLink" readonly>
+          <button onclick="copyLink('shareViewLink')">Copy</button>
+        </div>
+      </div>
+      <div class="share-link-group">
+        <label>Edit link (requires PIN)</label>
+        <div class="share-link-row">
+          <input type="text" id="shareEditLink" readonly>
+          <button onclick="copyLink('shareEditLink')">Copy</button>
+        </div>
+      </div>
+      <button class="modal-btn" onclick="closeShareModal()" style="margin-top: 0.5rem;">Close</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       UPLOAD PROGRESS
+       ========================================== -->
+  <div class="upload-progress" id="uploadProgress">
+    <p id="uploadText">Uploading...</p>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="uploadBar"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Floating share button (always visible on Firestore cards) -->
+  <button class="share-fab" id="shareFab" onclick="openShareModal()" title="Share this card">&#x2709;</button>
+
+  <!-- ==========================================
+       EDITOR TOOLBAR (fixed bottom bar)
+       ========================================== -->
+  <div class="editor-toolbar" id="editorToolbar">
+    <button class="toolbar-btn" onclick="addPhoto()">+ Photo</button>
+    <button class="toolbar-btn" onclick="addVideo()">+ Video</button>
+    <button class="toolbar-btn" onclick="openShareModal()">Share</button>
+    <button class="toolbar-btn primary" onclick="exitEditMode()">Done</button>
+  </div>
+
+  <!-- Hidden file inputs -->
+  <input type="file" id="photoInput" accept="image/*" multiple style="display:none">
+  <input type="file" id="videoInput" accept="video/*" style="display:none">
+
+  <!-- SortableJS for reorder (loaded only if needed) -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
+
+  <!-- ============================================
+       JAVASCRIPT
+       ============================================ -->
+  <script>
+    // ============================================
+    // WEBGL2 PSYCHEDELIC VORTEX BACKGROUND
+    // Adapted from psychedelic-vortex-hero component
+    // Customised with warm gold/burgundy birthday palette
+    // ============================================
+    (function() {
+      const canvas = document.getElementById('vortexCanvas');
+      if (!canvas) return;
+
+      const gl = canvas.getContext('webgl2', {
+        alpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        preserveDrawingBuffer: false,
+        powerPreference: 'high-performance'
+      });
+
+      if (!gl) {
+        // WebGL2 not supported — hide canvas, hero still looks fine
+        canvas.style.display = 'none';
+        return;
+      }
+
+      // --- Vertex shader (full-screen quad) ---
+      const vertSrc = `#version 300 es
+      precision highp float;
+      in vec4 position;
+      void main() { gl_Position = position; }`;
+
+      // --- Fragment shader with warm birthday palette ---
+      const fragSrc = `#version 300 es
+      precision highp float;
+      uniform float time;
+      uniform vec2 resolution;
+      out vec4 fragColor;
+
+      vec3 palette(float t) {
+        // Warm golds, deep reds, amber — birthday celebration feel
+        vec3 a = vec3(0.5, 0.4, 0.3);
+        vec3 b = vec3(0.5, 0.4, 0.3);
+        vec3 c = vec3(1.0, 0.7, 0.4);
+        vec3 d = vec3(0.0, 0.15, 0.20);
+        return a + b * cos(6.28318 * (c * t + d));
+      }
+
+      void main() {
+        vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / resolution.y;
+        float angle = atan(uv.y, uv.x);
+        float r = length(uv);
+
+        // Slow rotation
+        angle += time * 0.08;
+
+        // Pulsating ring pattern
+        float bands = mod(r * 15.0 + time * 0.35, 1.0);
+        float glow = smoothstep(0.0, 0.12, bands) * smoothstep(1.0, 0.88, bands);
+
+        // Radial spokes
+        float spokes = mod(angle * 8.0, 6.28318);
+        float spoke_value = sin(spokes) * 0.5 + 0.5;
+
+        // Combine
+        float v = (glow * 0.65 + spoke_value * 0.35);
+        v = pow(v, 1.6);
+
+        // Colour with cycling palette
+        vec3 col = palette(v + time * 0.06);
+
+        // Depth-based hue shift
+        col *= (0.5 + 0.5 * cos(r * 3.5 + time * 0.5 + vec3(0, 1, 2)));
+
+        // Strong vignette to darken edges
+        float vig = 1.0 - pow(r, 2.0) * 0.6;
+        col *= vig;
+
+        fragColor = vec4(col, 1.0);
+      }`;
+
+      function compileShader(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+          console.error('Shader error:', gl.getShaderInfoLog(s));
+          gl.deleteShader(s);
+          return null;
+        }
+        return s;
+      }
+
+      const vs = compileShader(gl.VERTEX_SHADER, vertSrc);
+      const fs = compileShader(gl.FRAGMENT_SHADER, fragSrc);
+      if (!vs || !fs) { canvas.style.display = 'none'; return; }
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Link error:', gl.getProgramInfoLog(program));
+        canvas.style.display = 'none';
+        return;
+      }
+
+      // Full-screen quad
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1,-1,-1,1,1,1,-1]), gl.STATIC_DRAW);
+      const posLoc = gl.getAttribLocation(program, 'position');
+      gl.enableVertexAttribArray(posLoc);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+      const uTime = gl.getUniformLocation(program, 'time');
+      const uRes = gl.getUniformLocation(program, 'resolution');
+
+      function resize() {
+        const hero = canvas.parentElement;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = hero.clientWidth * dpr;
+        canvas.height = hero.clientHeight * dpr;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+
+      let rafId;
+      function animate(t) {
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.useProgram(program);
+        gl.uniform1f(uTime, t * 0.001);
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        rafId = requestAnimationFrame(animate);
+      }
+
+      resize();
+      rafId = requestAnimationFrame(animate);
+
+      // Resize observer
+      const ro = new ResizeObserver(resize);
+      ro.observe(canvas.parentElement);
+
+      // Stop animation when hero is off-screen for performance
+      const heroEl = canvas.parentElement;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            if (!rafId) rafId = requestAnimationFrame(animate);
+          } else {
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+          }
+        });
+      }, { threshold: 0 });
+      io.observe(heroEl);
+    })();
+
+    // --- Sprocket generation ---
+    function generateSprockets(containerId) {
+      const container = document.getElementById(containerId);
+      const width = container.parentElement.offsetWidth;
+      const sprocketCount = Math.floor(width / 36);
+      container.innerHTML = '';
+      for (let i = 0; i < sprocketCount; i++) {
+        const sprocket = document.createElement('div');
+        sprocket.className = 'sprocket';
+        container.appendChild(sprocket);
+      }
+    }
+
+    generateSprockets('sprockets-top');
+    generateSprockets('sprockets-bottom');
+    window.addEventListener('resize', () => {
+      generateSprockets('sprockets-top');
+      generateSprockets('sprockets-bottom');
+    });
+
+    // ============================================
+    // SLIDE DATA (extracted from hardcoded HTML)
+    // In Firebase mode, this is replaced by Firestore data
+    // ============================================
+    const DEFAULT_SLIDES = [
+      { type: "image", src: "photos/IMG_0126.jpg", caption: "Where it all began", alt: "Dad and daughter, childhood throwback" },
+      { type: "image", src: "photos/IMG_0127.PNG", caption: "Always up for an adventure", alt: "Dad and daughter out together" },
+      { type: "image", src: "photos/IMG_0139.PNG", caption: "Father & son", alt: "Son and dad at dinner" },
+      { type: "image", src: "photos/IMG_0128.PNG", caption: "Scrubbing up nicely", alt: "Son and dad at a formal event" },
+      { type: "image", src: "photos/IMG_0140.jpg", caption: "The best view in the world", alt: "Dad selfie in front of The Best View in the World sign" },
+      { type: "image", src: "photos/IMG_0141.PNG", caption: "Taking it all in", alt: "Dad sitting by the sea" },
+      { type: "image", src: "photos/IMG_0129.PNG", caption: "Dinner dates with Dad", alt: "Dad and daughter at dinner" },
+      { type: "image", src: "photos/6bc27552-fbc5-40db-a744-7f10f551d189.JPG", caption: "Golden hour, golden memories", alt: "Family at sunset viewpoint" },
+      { type: "image", src: "photos/a2989bcb-dca9-4556-a42d-67f1d33e82e1.JPG", caption: "Sunset with my boy", alt: "Dad and son at sunset" },
+      { type: "image", src: "photos/IMG_0131.PNG", caption: "The whole crew", alt: "Family group at sunset viewpoint" },
+      { type: "image", src: "photos/28aefa7e-41cf-4439-8344-4c5aa5780829.JPG", caption: "Boys' night out", alt: "Dad with friend out at night" },
+      { type: "image", src: "photos/IMG_0138.jpg", caption: "All smiles", alt: "Dad selfie with friend" },
+      { type: "image", src: "photos/c6117dba-fe13-4588-bf98-5cf4a82cf2d9.JPG", caption: "Lunchtime in the sun", alt: "Dad feeding toddler outdoors" },
+      { type: "image", src: "photos/ba76f36d-51f7-4e50-a90e-243c3b7966a8.JPG", caption: "The best giggles", alt: "Dad laughing with toddler on sofa" },
+      { type: "image", src: "photos/253c1ab4-2407-4725-b23e-0a77d944c38e.JPG", caption: "Love at first sight", alt: "Dad holding newborn baby" },
+      { type: "image", src: "photos/3cba70fc-7bdb-4858-8abd-a8cbfa373e9f.JPG", caption: "The proudest grandad", alt: "Dad smiling with newborn" },
+      { type: "image", src: "photos/f174b0f1-d51d-4a06-9b4f-1b76029e4e02.JPG", caption: "Cuddles with grandad", alt: "Dad with baby on the couch" },
+      { type: "image", src: "photos/8b192a32-39c4-4190-9ffb-01aee4a66b7c.JPG", caption: "Safe in your arms", alt: "Dad cradling baby gently" },
+      { type: "video", src: "video/IMG_0173.MOV", caption: "", alt: "" }
+    ];
+
+    // ============================================
+    // RENDER SLIDES — builds slide DOM from data array
+    // ============================================
+    function renderSlides(slidesData) {
+      const slideshow = document.getElementById('slideshow');
+      const navPrev = document.getElementById('prevBtn');
+      const navNext = document.getElementById('nextBtn');
+      const counterEl = document.getElementById('slideCounter');
+
+      // Remove existing slides (but keep nav buttons and counter)
+      slideshow.querySelectorAll('.slide').forEach(s => s.remove());
+
+      // Create slide elements
+      slidesData.forEach((slide, i) => {
+        const div = document.createElement('div');
+        div.className = 'slide' + (i === 0 ? ' active' : '');
+
+        if (slide.type === 'video') {
+          const video = document.createElement('video');
+          video.src = slide.src || slide.downloadURL || '';
+          video.controls = true;
+          video.playsInline = true;
+          div.appendChild(video);
+        } else {
+          const img = document.createElement('img');
+          img.src = slide.src || slide.downloadURL || '';
+          img.alt = slide.alt || slide.caption || '';
+          div.appendChild(img);
+        }
+
+        if (slide.caption) {
+          const cap = document.createElement('div');
+          cap.className = 'slide-caption';
+          cap.setAttribute('data-slide-caption', i);
+          cap.textContent = slide.caption;
+          div.appendChild(cap);
+        }
+
+        // Remove button (visible only in edit mode)
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'slide-remove-btn';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.setAttribute('data-slide-index', i);
+        removeBtn.addEventListener('click', () => removeSlide(i));
+        div.appendChild(removeBtn);
+
+        // Insert before the nav buttons
+        slideshow.insertBefore(div, navPrev);
+      });
+
+      counterEl.textContent = `1 / ${slidesData.length}`;
+    }
+
+    // ============================================
+    // INIT SLIDESHOW — sets up navigation, dots, auto-advance
+    // Call after renderSlides()
+    // ============================================
+    function initSlideshow() {
+      const slideshow = document.getElementById('slideshow');
+      const slides = slideshow.querySelectorAll('.slide');
+      const dotsContainer = document.getElementById('slideDots');
+      const counter = document.getElementById('slideCounter');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (slides.length === 0) return;
+
+      let current = 0;
+      let autoTimer = null;
+      const AUTO_INTERVAL = 5000;
+
+      // Clear and regenerate dots
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      });
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dotsContainer.children[current].classList.remove('active');
+        const oldVideo = slides[current].querySelector('video');
+        if (oldVideo) oldVideo.pause();
+
+        current = (index + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dotsContainer.children[current].classList.add('active');
+        counter.textContent = `${current + 1} / ${slides.length}`;
+
+        const newVideo = slides[current].querySelector('video');
+        if (newVideo) { stopAuto(); } else { startAuto(); }
+      }
+
+      function next() { goTo(current + 1); }
+      function prev() { goTo(current - 1); }
+
+      // Remove old listeners by cloning buttons
+      const newPrev = prevBtn.cloneNode(true);
+      const newNext = nextBtn.cloneNode(true);
+      prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+      nextBtn.parentNode.replaceChild(newNext, nextBtn);
+      newPrev.addEventListener('click', () => { prev(); resetAuto(); });
+      newNext.addEventListener('click', () => { next(); resetAuto(); });
+
+      function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(next, AUTO_INTERVAL);
+      }
+      function stopAuto() {
+        if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+      }
+      function resetAuto() {
+        stopAuto();
+        const v = slides[current].querySelector('video');
+        if (!v) startAuto();
+      }
+
+      slideshow.addEventListener('mouseenter', stopAuto);
+      slideshow.addEventListener('mouseleave', () => {
+        const v = slides[current].querySelector('video');
+        if (!v) startAuto();
+      });
+
+      // Touch swipe
+      let touchStartX = 0;
+      slideshow.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+      slideshow.addEventListener('touchend', (e) => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) next(); else prev();
+          resetAuto();
+        }
+      }, { passive: true });
+
+      // Keyboard
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { prev(); resetAuto(); }
+        if (e.key === 'ArrowRight') { next(); resetAuto(); }
+      });
+
+      // Video events
+      slides.forEach(slide => {
+        const video = slide.querySelector('video');
+        if (video) {
+          video.addEventListener('play', stopAuto);
+          video.addEventListener('ended', () => { startAuto(); setTimeout(next, 1000); });
+        }
+      });
+
+      // Start
+      if (!slides[0].querySelector('video')) startAuto();
+    }
+
+    // ============================================
+    // FIREBASE INIT & URL ROUTING
+    // ============================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCF1aXQ4Zal5WAmlXePrqo035BvX_dwolg",
+      authDomain: "birthday-ecard-7d97f.firebaseapp.com",
+      projectId: "birthday-ecard-7d97f",
+      storageBucket: "birthday-ecard-7d97f.firebasestorage.app",
+      messagingSenderId: "325755599889",
+      appId: "1:325755599889:web:2d90142ce40a25f37205b0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    // Media uploads handled by Cloudinary (no Firebase Storage needed)
+
+    // URL params determine mode
+    const params = new URLSearchParams(window.location.search);
+    const cardId = params.get('card');
+    const isEditMode = params.get('edit') === 'true';
+    const isCreateMode = params.get('create') === 'true';
+
+    // Default text content (used in legacy/local mode)
+    const DEFAULT_TEXT = {
+      heroTitle: 'Happy Birthday',
+      heroSubtitle: 'Dad',
+      scrollHintText: 'Scroll down for a trip down memory lane',
+      messageHeading: 'A Few Words For You',
+      messageBody: 'Dear Dad,\n\nThank you for everything — for all the laughs, the lessons, and the love. Every memory with you is a gift, and today we celebrate the most wonderful dad in the world.\n\nHere\'s to many more adventures together.',
+      signoffLine1: 'with all our love,',
+      signoffLine2: 'Your Kids',
+      footerText: 'Happy Birthday!'
+    };
+
+    // Populate text fields from a data object
+    function applyTextData(data) {
+      document.querySelectorAll('[data-field]').forEach(el => {
+        const field = el.getAttribute('data-field');
+        if (data[field] !== undefined && data[field] !== null) {
+          if (field === 'messageBody') {
+            // Preserve line breaks in the message
+            el.innerHTML = data[field].replace(/\n/g, '<br>');
+          } else {
+            el.textContent = data[field];
+          }
+        }
+      });
+    }
+
+    // Load card from Firestore
+    async function loadCard(id) {
+      try {
+        const doc = await db.collection('cards').doc(id).get();
+        if (!doc.exists) {
+          console.warn('Card not found:', id);
+          // Fall back to local data
+          renderSlides(DEFAULT_SLIDES);
+          initSlideshow();
+          return null;
+        }
+        const data = doc.data();
+
+        // Apply text fields
+        applyTextData(data);
+
+        // Render slides from Firestore data
+        if (data.slides && data.slides.length > 0) {
+          renderSlides(data.slides);
+        } else {
+          renderSlides(DEFAULT_SLIDES);
+        }
+        initSlideshow();
+        return data;
+      } catch (err) {
+        console.error('Error loading card:', err);
+        renderSlides(DEFAULT_SLIDES);
+        initSlideshow();
+        return null;
+      }
+    }
+
+    // ============================================
+    // CLOUDINARY CONFIG
+    // ============================================
+    const CLOUDINARY_CLOUD = 'dqd8qy74c';
+    const CLOUDINARY_PRESET = 'birthday_ecard';
+
+    // ============================================
+    // TOAST NOTIFICATIONS
+    // ============================================
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), duration);
+    }
+
+    // ============================================
+    // PIN HASHING (Web Crypto API)
+    // ============================================
+    async function hashPin(pin) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(pin);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // ============================================
+    // CURRENT CARD STATE
+    // ============================================
+    let currentCardData = null;
+    let currentSlides = [];
+
+    // ============================================
+    // PIN MODAL
+    // ============================================
+    function showPinModal() {
+      document.getElementById('pinModal').classList.add('active');
+      document.getElementById('pinInput').focus();
+    }
+
+    function closePinModal() {
+      document.getElementById('pinModal').classList.remove('active');
+      document.getElementById('pinError').style.display = 'none';
+      document.getElementById('pinInput').value = '';
+    }
+
+    document.getElementById('pinSubmitBtn').addEventListener('click', validatePin);
+    document.getElementById('pinInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') validatePin();
+    });
+
+    async function validatePin() {
+      const pin = document.getElementById('pinInput').value.trim();
+      if (!pin) return;
+
+      const hashed = await hashPin(pin);
+      if (currentCardData && hashed === currentCardData.pinHash) {
+        sessionStorage.setItem('cardPin_' + cardId, hashed);
+        closePinModal();
+        enterEditMode();
+      } else {
+        document.getElementById('pinError').style.display = 'block';
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinInput').focus();
+      }
+    }
+
+    // ============================================
+    // EDIT MODE
+    // ============================================
+    function enterEditMode() {
+      document.body.classList.add('editing');
+      document.getElementById('editorToolbar').classList.add('active');
+
+      // Make text fields editable
+      document.querySelectorAll('[data-field]').forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+        el.addEventListener('blur', onFieldBlur);
+      });
+
+      // Make captions editable
+      document.querySelectorAll('[data-slide-caption]').forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+        el.addEventListener('blur', onCaptionBlur);
+      });
+
+      showToast('Edit mode — tap text to edit, use toolbar below');
+    }
+
+    function exitEditMode() {
+      document.body.classList.remove('editing');
+      document.getElementById('editorToolbar').classList.remove('active');
+
+      document.querySelectorAll('[contenteditable]').forEach(el => {
+        el.removeAttribute('contenteditable');
+      });
+
+      showToast('Changes saved');
+    }
+
+    // ============================================
+    // SAVE TEXT FIELDS TO FIRESTORE
+    // ============================================
+    let saveTimer = null;
+    function debouncedSave(updates) {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(async () => {
+        if (!cardId) return;
+        try {
+          updates.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('cards').doc(cardId).update(updates);
+        } catch (err) {
+          console.error('Save error:', err);
+          showToast('Error saving — please try again');
+        }
+      }, 500);
+    }
+
+    function onFieldBlur(e) {
+      const field = e.target.getAttribute('data-field');
+      let value;
+      if (field === 'messageBody') {
+        // Convert <br> back to newlines for storage
+        value = e.target.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
+      } else {
+        value = e.target.textContent;
+      }
+      debouncedSave({ [field]: value });
+    }
+
+    function onCaptionBlur(e) {
+      const idx = parseInt(e.target.getAttribute('data-slide-caption'));
+      const newCaption = e.target.textContent;
+      if (!cardId || !currentSlides[idx]) return;
+      currentSlides[idx].caption = newCaption;
+      debouncedSave({ slides: currentSlides });
+    }
+
+    // ============================================
+    // CLOUDINARY UPLOAD
+    // ============================================
+    async function uploadToCloudinary(file, onProgress) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_PRESET);
+      formData.append('folder', 'birthday-ecard/' + (cardId || 'local'));
+
+      const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
+      const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`;
+
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url);
+
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable && onProgress) {
+            onProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error(`Upload failed: ${xhr.status}`));
+          }
+        });
+
+        xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+        xhr.send(formData);
+      });
+    }
+
+    function showUploadProgress(text) {
+      document.getElementById('uploadText').textContent = text || 'Uploading...';
+      document.getElementById('uploadBar').style.width = '0%';
+      document.getElementById('uploadProgress').classList.add('active');
+    }
+
+    function updateUploadProgress(pct) {
+      document.getElementById('uploadBar').style.width = pct + '%';
+    }
+
+    function hideUploadProgress() {
+      document.getElementById('uploadProgress').classList.remove('active');
+    }
+
+    // ============================================
+    // ADD PHOTO / VIDEO
+    // ============================================
+    function addPhoto() {
+      document.getElementById('photoInput').click();
+    }
+
+    function addVideo() {
+      document.getElementById('videoInput').click();
+    }
+
+    document.getElementById('photoInput').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      for (let i = 0; i < files.length; i++) {
+        showUploadProgress(`Uploading photo ${i + 1} of ${files.length}...`);
+        try {
+          const result = await uploadToCloudinary(files[i], updateUploadProgress);
+          const newSlide = {
+            order: currentSlides.length,
+            type: 'image',
+            src: result.secure_url,
+            downloadURL: result.secure_url,
+            caption: '',
+            alt: files[i].name
+          };
+          currentSlides.push(newSlide);
+          await db.collection('cards').doc(cardId).update({
+            slides: currentSlides,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          renderSlides(currentSlides);
+          initSlideshow();
+          enterEditMode(); // Re-apply edit mode to new DOM
+        } catch (err) {
+          console.error('Upload error:', err);
+          showToast('Upload failed — please try again');
+        }
+      }
+      hideUploadProgress();
+      showToast(`${files.length} photo${files.length > 1 ? 's' : ''} added`);
+      e.target.value = '';
+    });
+
+    document.getElementById('videoInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      showUploadProgress('Uploading video...');
+      try {
+        const result = await uploadToCloudinary(file, updateUploadProgress);
+        const newSlide = {
+          order: currentSlides.length,
+          type: 'video',
+          src: result.secure_url,
+          downloadURL: result.secure_url,
+          caption: '',
+          alt: file.name
+        };
+        currentSlides.push(newSlide);
+        await db.collection('cards').doc(cardId).update({
+          slides: currentSlides,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        renderSlides(currentSlides);
+        initSlideshow();
+        enterEditMode();
+        showToast('Video added');
+      } catch (err) {
+        console.error('Upload error:', err);
+        showToast('Upload failed — please try again');
+      }
+      hideUploadProgress();
+      e.target.value = '';
+    });
+
+    // ============================================
+    // REMOVE SLIDE
+    // ============================================
+    async function removeSlide(index) {
+      if (!confirm('Remove this slide?')) return;
+
+      currentSlides.splice(index, 1);
+      // Re-number order
+      currentSlides.forEach((s, i) => s.order = i);
+
+      try {
+        await db.collection('cards').doc(cardId).update({
+          slides: currentSlides,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        renderSlides(currentSlides);
+        initSlideshow();
+        enterEditMode();
+        showToast('Slide removed');
+      } catch (err) {
+        console.error('Remove error:', err);
+        showToast('Error removing slide');
+      }
+    }
+
+    // ============================================
+    // SHARE MODAL
+    // ============================================
+    function openShareModal() {
+      const base = window.location.origin + window.location.pathname;
+      document.getElementById('shareViewLink').value = `${base}?card=${cardId}`;
+      document.getElementById('shareEditLink').value = `${base}?card=${cardId}&edit=true`;
+      document.getElementById('shareModal').classList.add('active');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareModal').classList.remove('active');
+    }
+
+    function copyLink(inputId) {
+      const input = document.getElementById(inputId);
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        showToast('Link copied!');
+      });
+    }
+
+    // ============================================
+    // REAL-TIME SYNC (edit mode)
+    // ============================================
+    let localUpdateInProgress = false;
+    function startRealtimeSync() {
+      if (!cardId) return;
+      db.collection('cards').doc(cardId).onSnapshot((doc) => {
+        if (localUpdateInProgress) return;
+        if (!doc.exists) return;
+        const data = doc.data();
+        currentCardData = data;
+        currentSlides = data.slides || [];
+
+        // Update text fields (but not if user is actively editing them)
+        const activeEl = document.activeElement;
+        document.querySelectorAll('[data-field]').forEach(el => {
+          if (el === activeEl) return; // Don't overwrite active editing
+          const field = el.getAttribute('data-field');
+          if (data[field] !== undefined) {
+            if (field === 'messageBody') {
+              el.innerHTML = data[field].replace(/\n/g, '<br>');
+            } else {
+              el.textContent = data[field];
+            }
+          }
+        });
+      });
+    }
+
+    // ============================================
+    // ROUTE & INIT
+    // ============================================
+    (async function route() {
+      if (cardId) {
+        const data = await loadCard(cardId);
+        if (data) {
+          currentCardData = data;
+          currentSlides = data.slides || [];
+
+          // Show share button on any Firestore card
+          document.getElementById('shareFab').classList.add('active');
+
+          if (isEditMode) {
+            // Check for cached PIN
+            const cachedPin = sessionStorage.getItem('cardPin_' + cardId);
+            if (cachedPin && cachedPin === data.pinHash) {
+              enterEditMode();
+            } else {
+              showPinModal();
+            }
+            startRealtimeSync();
+          }
+        }
+      } else {
+        // Legacy mode — use local data
+        currentSlides = DEFAULT_SLIDES;
+        renderSlides(DEFAULT_SLIDES);
+        initSlideshow();
+      }
+    })();
+
+    // --- Scroll reveal ---
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+  </script>
+</body>
+</html>

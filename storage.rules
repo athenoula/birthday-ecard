@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Open access for personal birthday card project
+    match /cards/{allPaths=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

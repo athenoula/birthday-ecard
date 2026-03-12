@@ -89,7 +89,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      touch-action: none;
+      touch-action: pan-y;
     }
 
     /* Dark overlay so text stays readable over the vortex */
@@ -1295,11 +1295,17 @@ Here's to many more adventures together.</p>
         if (!v) startAuto();
       };
       let touchStartX = 0;
-      const onTouchStart = (e) => { touchStartX = e.touches[0].clientX; };
+      let touchStartY = 0;
+      const onTouchStart = (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      };
       const onTouchEnd = (e) => {
-        const diff = touchStartX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 50) {
-          if (diff > 0) next(); else prev();
+        const diffX = touchStartX - e.changedTouches[0].clientX;
+        const diffY = touchStartY - e.changedTouches[0].clientY;
+        // Only swipe if horizontal movement is dominant (not a scroll)
+        if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+          if (diffX > 0) next(); else prev();
           resetAuto();
         }
       };

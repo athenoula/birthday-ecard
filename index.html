@@ -1164,9 +1164,21 @@ Here's to many more adventures together.</p>
     ];
 
     // ============================================
+    // SORT SLIDES — videos first, then images (preserving relative order)
+    // ============================================
+    function sortSlides(slides) {
+      const videos = slides.filter(s => s.type === 'video');
+      const images = slides.filter(s => s.type !== 'video');
+      const sorted = [...videos, ...images];
+      sorted.forEach((s, i) => s.order = i);
+      return sorted;
+    }
+
+    // ============================================
     // RENDER SLIDES — builds slide DOM from data array
     // ============================================
     function renderSlides(slidesData) {
+      slidesData = sortSlides(slidesData);
       const slideshow = document.getElementById('slideshow');
       const navPrev = document.getElementById('prevBtn');
       const navNext = document.getElementById('nextBtn');

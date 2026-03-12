@@ -1220,7 +1220,12 @@ Here's to many more adventures together.</p>
     // INIT SLIDESHOW — sets up navigation, dots, auto-advance
     // Call after renderSlides()
     // ============================================
+    let _slideshowCleanup = null;
+
     function initSlideshow() {
+      // Clean up previous instance
+      if (_slideshowCleanup) _slideshowCleanup();
+
       const slideshow = document.getElementById('slideshow');
       const slides = slideshow.querySelectorAll('.slide');
       const dotsContainer = document.getElementById('slideDots');
@@ -1283,30 +1288,31 @@ Here's to many more adventures together.</p>
         if (!v) startAuto();
       }
 
-      slideshow.addEventListener('mouseenter', stopAuto);
-      slideshow.addEventListener('mouseleave', () => {
+      // Named handlers so we can remove them on cleanup
+      const onMouseEnter = () => stopAuto();
+      const onMouseLeave = () => {
         const v = slides[current].querySelector('video');
         if (!v) startAuto();
-      });
-
-      // Touch swipe
+      };
       let touchStartX = 0;
-      slideshow.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-      }, { passive: true });
-      slideshow.addEventListener('touchend', (e) => {
+      const onTouchStart = (e) => { touchStartX = e.touches[0].clientX; };
+      const onTouchEnd = (e) => {
         const diff = touchStartX - e.changedTouches[0].clientX;
         if (Math.abs(diff) > 50) {
           if (diff > 0) next(); else prev();
           resetAuto();
         }
-      }, { passive: true });
-
-      // Keyboard
-      document.addEventListener('keydown', (e) => {
+      };
+      const onKeyDown = (e) => {
         if (e.key === 'ArrowLeft') { prev(); resetAuto(); }
         if (e.key === 'ArrowRight') { next(); resetAuto(); }
-      });
+      };
+
+      slideshow.addEventListener('mouseenter', onMouseEnter);
+      slideshow.addEventListener('mouseleave', onMouseLeave);
+      slideshow.addEventListener('touchstart', onTouchStart, { passive: true });
+      slideshow.addEventListener('touchend', onTouchEnd, { passive: true });
+      document.addEventListener('keydown', onKeyDown);
 
       // Video events
       slides.forEach(slide => {
@@ -1319,6 +1325,16 @@ Here's to many more adventures together.</p>
 
       // Start
       if (!slides[0].querySelector('video')) startAuto();
+
+      // Store cleanup function
+      _slideshowCleanup = () => {
+        stopAuto();
+        slideshow.removeEventListener('mouseenter', onMouseEnter);
+        slideshow.removeEventListener('mouseleave', onMouseLeave);
+        slideshow.removeEventListener('touchstart', onTouchStart);
+        slideshow.removeEventListener('touchend', onTouchEnd);
+        document.removeEventListener('keydown', onKeyDown);
+      };
     }
 
     // ============================================
@@ -1617,16 +1633,28 @@ Here's to many more adventures together.</p>
             alt: files[i].name
           };
           currentSlides.push(newSlide);
-          await db.collection('cards').doc(cardId).update({
-            slides: currentSlides,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          if (cardId) {
+            await db.collection('cards').doc(cardId).update({
+              slides: currentSlides,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
           renderSlides(currentSlides);
           initSlideshow();
-          enterEditMode(); // Re-apply edit mode to new DOM
+          // Navigate to the newly added slide
+          const newSlides = document.querySelectorAll('#slideshow .slide');
+          if (newSlides.length > 0) {
+            newSlides.forEach(s => s.classList.remove('active'));
+            newSlides[newSlides.length - 1].classList.add('active');
+            const dots = document.querySelectorAll('#slideDots .slide-dot');
+            dots.forEach(d => d.classList.remove('active'));
+            if (dots[dots.length - 1]) dots[dots.length - 1].classList.add('active');
+            document.getElementById('slideCounter').textContent = `${newSlides.length} / ${newSlides.length}`;
+          }
+          enterEditMode();
         } catch (err) {
           console.error('Upload error:', err);
-          showToast('Upload failed — please try again');
+          showToast('Upload failed: ' + err.message);
         }
       }
       hideUploadProgress();
@@ -1650,17 +1678,29 @@ Here's to many more adventures together.</p>
           alt: file.name
         };
         currentSlides.push(newSlide);
-        await db.collection('cards').doc(cardId).update({
-          slides: currentSlides,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        if (cardId) {
+          await db.collection('cards').doc(cardId).update({
+            slides: currentSlides,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
         renderSlides(currentSlides);
         initSlideshow();
+        // Navigate to the newly added slide
+        const newSlides = document.querySelectorAll('#slideshow .slide');
+        if (newSlides.length > 0) {
+          newSlides.forEach(s => s.classList.remove('active'));
+          newSlides[newSlides.length - 1].classList.add('active');
+          const dots = document.querySelectorAll('#slideDots .slide-dot');
+          dots.forEach(d => d.classList.remove('active'));
+          if (dots[dots.length - 1]) dots[dots.length - 1].classList.add('active');
+          document.getElementById('slideCounter').textContent = `${newSlides.length} / ${newSlides.length}`;
+        }
         enterEditMode();
         showToast('Video added');
       } catch (err) {
         console.error('Upload error:', err);
-        showToast('Upload failed — please try again');
+        showToast('Upload failed: ' + err.message);
       }
       hideUploadProgress();
       e.target.value = '';

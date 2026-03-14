@@ -1174,11 +1174,15 @@ Here's to many more adventures together.</p>
       return sorted;
     }
 
+    // Tracks the rendered (sorted) order so remove/caption use correct indices
+    let renderedSlides = [];
+
     // ============================================
     // RENDER SLIDES — builds slide DOM from data array
     // ============================================
     function renderSlides(slidesData) {
-      slidesData = sortSlides(slidesData);
+      renderedSlides = sortSlides(slidesData);
+      slidesData = renderedSlides;
       const slideshow = document.getElementById('slideshow');
       const navPrev = document.getElementById('prevBtn');
       const navNext = document.getElementById('nextBtn');
@@ -1569,8 +1573,8 @@ Here's to many more adventures together.</p>
     function onCaptionBlur(e) {
       const idx = parseInt(e.target.getAttribute('data-slide-caption'));
       const newCaption = e.target.textContent;
-      if (!cardId || !currentSlides[idx]) return;
-      currentSlides[idx].caption = newCaption;
+      if (!cardId || !renderedSlides[idx]) return;
+      renderedSlides[idx].caption = newCaption;
       debouncedSave({ slides: currentSlides });
     }
 
@@ -1730,7 +1734,11 @@ Here's to many more adventures together.</p>
     async function removeSlide(index) {
       if (!confirm('Remove this slide?')) return;
 
-      currentSlides.splice(index, 1);
+      // Find the actual slide object from the rendered (sorted) order
+      const slideToRemove = renderedSlides[index];
+      const actualIndex = currentSlides.indexOf(slideToRemove);
+      if (actualIndex === -1) return;
+      currentSlides.splice(actualIndex, 1);
       // Re-number order
       currentSlides.forEach((s, i) => s.order = i);
 

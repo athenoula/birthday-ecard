@@ -1735,6 +1735,7 @@ Here's to many more adventures together.</p>
       currentSlides.splice(index, 1);
       currentSlides.forEach((s, i) => s.order = i);
 
+      localUpdateInProgress = true;
       try {
         await db.collection('cards').doc(cardId).update({
           slides: currentSlides,
@@ -1747,6 +1748,8 @@ Here's to many more adventures together.</p>
       } catch (err) {
         console.error('Remove error:', err);
         showToast('Error removing slide');
+      } finally {
+        setTimeout(() => { localUpdateInProgress = false; }, 500);
       }
     }
 
@@ -1783,7 +1786,7 @@ Here's to many more adventures together.</p>
         if (!doc.exists) return;
         const data = doc.data();
         currentCardData = data;
-        currentSlides = data.slides || [];
+        currentSlides = sortSlides(data.slides || []);
 
         // Update text fields (but not if user is actively editing them)
         const activeEl = document.activeElement;
